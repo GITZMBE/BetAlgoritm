@@ -1,50 +1,58 @@
-# Value Bet Finder
+# EdgeFinder — Value Bet Finder
 
-A React app that fetches real-time odds from multiple bookmakers and highlights value bets using expected value (EV) analysis.
+A modular React + Vite + Tailwind app that finds value bets across multiple bookmakers.
 
-## What it does
-- Pulls live & upcoming odds from **Bet365, Unibet, William Hill, Pinnacle, Bwin, Betsson** and more
-- Calculates **Expected Value (EV%)** for every outcome
-- Shows **Kelly criterion** stake sizing
-- Covers Premier League, Allsvenskan, Champions League, La Liga, Bundesliga, Serie A, Ligue 1, NBA, NFL, NHL, Tennis
+## Project structure
+
+```
+src/
+  data/
+    constants.js        # Sports list, bookmaker list, defaults
+    demoData.js         # Demo events shown without an API key
+  utils/
+    betting.js          # Pure math: EV, Kelly, formatting, ratings
+    processEvents.js    # Transforms raw API events → enriched match objects
+  hooks/
+    useOdds.js          # Fetches odds from The Odds API, manages loading/error state
+    useStorage.js       # useState persisted to localStorage
+  components/
+    ApiKeyModal.jsx     # First-launch API key entry
+    Navbar.jsx          # Sticky top nav
+    BetCard.jsx         # Collapsible match card
+    SelectionWalkthrough.jsx  # 4-step guided breakdown per outcome
+    OddsComparison.jsx  # Ranked bookmaker odds pills
+    StatBox.jsx         # Small metric tile
+    Step.jsx            # Numbered walkthrough step wrapper
+  pages/
+    TodayPage.jsx       # Daily plan — today's value bets only
+    AllMatchesPage.jsx  # All upcoming events with filters
+    SettingsPage.jsx    # Bankroll, API key, strategy explainers
+  App.jsx               # Root: wires hooks → pages → navbar
+  main.jsx              # Entry point
+  index.css             # Tailwind directives + component layer
+```
 
 ## Setup
 
 ### 1. Get a free API key
-Go to [https://the-odds-api.com](https://the-odds-api.com) and sign up for a free account.
-- Free tier: **500 requests/month**
-- Each refresh fetches 1 request per sport selected (e.g. 3 sports = 3 requests)
+Sign up at [the-odds-api.com](https://the-odds-api.com). Free tier: 500 requests/month.
 
-### 2. Install and run
-
+### 2. Run locally
 ```bash
 npm install
-npm start
+npm run dev
 ```
+Open http://localhost:5173, paste your API key, done.
 
-The app opens at `http://localhost:3000`. On first launch, enter your API key. It's saved in your browser so you only need to do this once.
-
-### 3. Build for production (optional)
-
+### 3. Build for production
 ```bash
 npm run build
 ```
+Drag the `dist/` folder onto [netlify.com](https://netlify.com).
 
-Then serve the `build/` folder with any static host.
+## How value betting works
 
-## How value bets work
-
-**EV% = (implied probability × best available odds − 1) × 100**
-
-- **Positive EV** = bookmaker odds are higher than the "true" probability suggests → value bet
-- **Kelly %** = recommended % of bankroll to stake (from Kelly criterion)
-- Green = strong value (EV > 5%), yellow = marginal, red = no value
-
-The implied probability is derived from the **average odds across all bookmakers**, which approximates the true probability after removing the vig. The best available odds are then compared against this.
-
-## Customising
-
-Edit `src/App.js`:
-- `SPORTS` array — add/remove leagues
-- `BOOKMAKERS_EU` — change which bookmakers to compare
-- `minEV` default — change the default EV filter threshold
+- **EV%** = (implied probability × best odds − 1) × 100  
+- Positive EV = bookmaker is offering more than the fair price → value bet  
+- **Half-Kelly stake** = (kelly% / 2) × bankroll — reduces variance vs full Kelly  
+- Implied probability derived from average odds across all bookmakers (removes vig)

@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { background-color: #060608; }
+  body { @apply bg-bg text-white font-body antialiased; margin: 0; }
+  * { box-sizing: border-box; }
+  input[type="range"] { accent-color: #c8f135; }
+  input[type="checkbox"] { accent-color: #c8f135; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0d0d12; }
+  ::-webkit-scrollbar-thumb { background: #2e2e45; border-radius: 3px; }
+}
+
+@layer components {
+  .nav-btn {
+    @apply px-4 py-2 rounded-lg text-sm font-display font-semibold transition-all duration-150 flex items-center gap-2 text-sub hover:text-white;
+  }
+  .nav-btn-active {
+    @apply bg-accent-bg text-accent;
+  }
+  .card {
+    @apply bg-surface border border-border rounded-2xl overflow-hidden;
+  }
+  .card-highlight {
+    @apply bg-surface border border-border-bright rounded-2xl overflow-hidden;
+  }
+  .pill {
+    @apply px-3 py-1 rounded-full border text-xs font-body font-medium transition-all duration-150 cursor-pointer;
+  }
+  .pill-active {
+    @apply bg-accent-bg border-accent text-accent;
+  }
+  .pill-inactive {
+    @apply bg-transparent border-border text-dim hover:border-border-bright hover:text-sub;
+  }
+  .stat-box {
+    @apply bg-surface-high border border-border rounded-xl p-3;
+  }
+  .section-label {
+    @apply text-xs font-mono font-semibold text-accent-dim uppercase tracking-widest mb-3;
+  }
+  .step-number {
+    @apply w-6 h-6 rounded-full bg-accent-bg border border-accent-dim flex items-center justify-center text-accent text-xs font-bold flex-shrink-0;
+  }
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-border-bright bg-surface-high text-white font-mono text-sm outline-none focus:border-accent transition-colors;
+  }
+  .btn-primary {
+    @apply px-6 py-3 rounded-xl bg-accent text-black font-display font-bold text-sm cursor-pointer hover:brightness-110 transition-all border-none;
+  }
+  .btn-ghost {
+    @apply px-4 py-2 rounded-lg border border-border-bright bg-transparent text-sub text-sm cursor-pointer hover:text-white hover:border-border transition-all;
+  }
+}
