@@ -1,11 +1,7 @@
 import { cacheExpiresLabel } from "../utils/oddsCache.js";
 
-export function Navbar({
-  page, setPage, todayCount,
-  loading, isDemo, lastUpdated, remainingReqs, fromCache,
-  onRefresh,
-}) {
-  const NavBtn = ({ id, label, badge }) => (
+function NavBtn({ id, label, badge, page, setPage }) {
+  return (
     <button
       onClick={() => setPage(id)}
       className={`nav-btn ${page === id ? "nav-btn-active" : ""}`}
@@ -18,7 +14,13 @@ export function Navbar({
       )}
     </button>
   );
+}
 
+export function Navbar({
+  page, setPage, todayCount,
+  loading, isDemo, lastUpdated, remainingReqs, fromCache,
+  onRefresh,
+}) {
   return (
     <header className="sticky top-0 z-40 bg-bg border-b border-border h-14 flex items-center px-6 justify-between">
       <div className="flex items-center gap-6">
@@ -26,9 +28,9 @@ export function Navbar({
           <span className="text-accent">◆</span> EdgeFinder
         </span>
         <nav className="flex gap-1">
-          <NavBtn id="today"    label="Today"       badge={todayCount} />
-          <NavBtn id="all"      label="All matches" />
-          <NavBtn id="settings" label="Settings" />
+          <NavBtn id="today"    label="Today"       badge={todayCount} page={page} setPage={setPage} />
+          <NavBtn id="all"      label="All matches" page={page} setPage={setPage} />
+          <NavBtn id="settings" label="Settings" page={page} setPage={setPage} />
         </nav>
       </div>
 
