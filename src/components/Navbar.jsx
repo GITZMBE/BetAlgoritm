@@ -1,7 +1,10 @@
-/**
- * Sticky top navigation bar.
- */
-export function Navbar({ page, setPage, todayCount, loading, isDemo, lastUpdated, remainingReqs, onRefresh }) {
+import { cacheExpiresLabel } from "../utils/oddsCache.js";
+
+export function Navbar({
+  page, setPage, todayCount,
+  loading, isDemo, lastUpdated, remainingReqs, fromCache,
+  onRefresh,
+}) {
   const NavBtn = ({ id, label, badge }) => (
     <button
       onClick={() => setPage(id)}
@@ -18,7 +21,6 @@ export function Navbar({ page, setPage, todayCount, loading, isDemo, lastUpdated
 
   return (
     <header className="sticky top-0 z-40 bg-bg border-b border-border h-14 flex items-center px-6 justify-between">
-      {/* Logo + nav */}
       <div className="flex items-center gap-6">
         <span className="text-base font-display font-extrabold tracking-tight text-white flex-shrink-0">
           <span className="text-accent">◆</span> EdgeFinder
@@ -30,14 +32,21 @@ export function Navbar({ page, setPage, todayCount, loading, isDemo, lastUpdated
         </nav>
       </div>
 
-      {/* Right side */}
       <div className="flex items-center gap-3">
         {isDemo && (
           <span className="text-[10px] bg-orange-950 text-warn px-2 py-1 rounded font-semibold font-mono">
-            Demo data
+            Demo
           </span>
         )}
-        {lastUpdated && (
+        {fromCache && !isDemo && (
+          <span
+            title={`Cached — refreshes at midnight (in ${cacheExpiresLabel()})`}
+            className="text-[10px] bg-accent-bg text-accent-dim px-2 py-1 rounded font-mono font-semibold cursor-default hidden sm:block"
+          >
+            📦 cached · {cacheExpiresLabel()} left
+          </span>
+        )}
+        {!fromCache && lastUpdated && !isDemo && (
           <span className="text-xs text-dim hidden sm:block font-mono">
             {lastUpdated.toLocaleTimeString("sv-SE")}
           </span>
@@ -51,6 +60,7 @@ export function Navbar({ page, setPage, todayCount, loading, isDemo, lastUpdated
           onClick={onRefresh}
           disabled={loading}
           className="btn-ghost text-accent disabled:opacity-40"
+          title={fromCache ? "Force refresh (uses 1 request per sport)" : "Refresh odds"}
         >
           {loading ? "Loading…" : "↻ Refresh"}
         </button>
